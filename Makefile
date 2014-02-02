@@ -13,7 +13,7 @@ endif
 
 drivers := driver/serio.o driver/adc.o driver/adcmap.o driver/hd44780.o
 shell := shell/shell.o shell/command.o shell/debug.o shell/adcutils.o
-util := util/buffer.o util/event.o
+util := buffer.o event.o
 
 objs := $(drivers) $(shell) $(util)
 

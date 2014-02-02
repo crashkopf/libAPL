@@ -7,7 +7,7 @@
 //#include <util/setbaud.h>
 
 #include "driver/serio.h"
-#include "util/buffer.h"
+#include "buffer.h"
 
 #define UART_BAUD 57600
 #define BSIZE 64

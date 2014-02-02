@@ -8,7 +8,7 @@
 #include "fakeavr.h"
 #endif //__AVR__
 #include "shell/command.h"
-#include "shell/shell.h"
+#include "shell.h"
 
 
 #include "debug.h"

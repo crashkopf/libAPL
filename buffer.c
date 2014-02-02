@@ -2,7 +2,7 @@
   buffer.c
 */
 
-#include "util/buffer.h"
+#include "buffer.h"
 
 #define E_NULLPTR 0
 
