@@ -6,7 +6,7 @@ CFLAGS = -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mm
 AR = avr-ar
 
 dirs := include utils driver sys shell ui
-srcs := $(foreach I,$(dirs),$(wildcard $I/*.c))
+srcs := $(foreach I,$(dirs),$(wildcard $I/*.c)) main.c
 objs := $(srcs:%.c=%.o)
 library := libAPL.a
 
@@ -21,7 +21,7 @@ libAPL.a: $(objs)
 	$(CC) $(CFLAGS) -MD -o $@ $<
 
 clean:
-	rm -f $(library) $(objs)
+	rm -f $(library) $(objs) $(objs:.o=.d)
 
 .PHONY: all install clean test
 

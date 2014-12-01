@@ -1,7 +1,6 @@
 
-#ifndef _BUFFER_H
-#include <buffer.h>
-#endif
+#ifndef _DEVICE_H
+#include "util/buffer.h"
 
 typedef struct device {
 	int (*init)(struct device *);
@@ -13,3 +12,5 @@ typedef struct device {
 	uint8_t	flags;
 } device;
 
+#define _DEVICE_H
+#endif

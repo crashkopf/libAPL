@@ -1,4 +1,5 @@
-#include <timer.h>
+#include "timer.h"
+#include "device.h"
 
 typedef struct {
 	unsigned int state; 
