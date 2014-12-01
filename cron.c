@@ -2,7 +2,7 @@
   event.c - Used to queue events for triggering or to measure the duration of an event.
 */
 #include <stdlib.h>
-#include "util/event.h"
+#include "event.h"
 
 /*
 	eq_add - add an event to the queue.

@@ -4,9 +4,8 @@
 #include <stdlib.h>
 #ifdef __AVR__
 #include <avr/pgmspace.h>
-#else
-#include "fakeavr.h"
 #endif //__AVR__
+#include "compat.h"
 #include "shell/command.h"
 #include "shell.h"
 

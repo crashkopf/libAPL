@@ -1,5 +1,7 @@
-
+#ifdef __AVR__
 #include <avr/io.h>
+#endif
+
 #include <stdint.h>
 
 // 10 bits
@@ -45,7 +47,17 @@ typedef struct {
 	PGM_P name;
 } ADCchannel_t;
 
+// ADC channel as opaque structure
+typedef struct adc_s adc_s;
 
+extern adc_s ADC0;
+extern adc_s ADC1;
+extern adc_s ADC2;
+extern adc_s ADC3;
+extern adc_s ADC4;
+extern adc_s ADC5;
+extern adc_s ADC6;
+extern adc_s ADC7;
 
 /* 
 Since the ADC channel configurations on the GCU can vary and have fancy multiplexing we have to make a map 
@@ -74,6 +86,9 @@ void ADC_Reset();
 //void ADC_loadmap(void *, const ADCchannel_t *);
 ADCsample_t ADC_Read(ADCcnum_t chan);
 unsigned int ADC_Channels();
+
+// Future ADC API
+uint16_t adc_read(adc_s *);
 
 #ifdef __cplusplus
 }

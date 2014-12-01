@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "view.h"
+#include "ui/view.h"
 
 view_ptr VmuxDefaultAcceptFunc(viewmux_ptr me);
 void VmuxDefaultEjectFunc(viewmux_ptr me, view_ptr view);

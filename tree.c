@@ -19,7 +19,7 @@ void NodeInsert (node_p dst, node_p src) {
 void BranchAppend (node_p branch, node_p node) {
 	if (branch->parent)
 		node->parent = branch->parent;
-	if (node->prev = Walk(branch, IsTerminus, 0))
+	if ((node->prev = Walk(branch, IsTerminus, 0)))
 		node->prev->next = node;
 }
 
@@ -87,11 +87,11 @@ int IsBehind(node_p n1, node_p n2){
 	return i;
 }
 
-int NextNode(node_p node){
+node_p NextNode(node_p node){
 	if (node) return node->next;
 	else return 0;
 }
-int PrevNode(node_p node){
+node_p PrevNode(node_p node){
 	if (node) return node->prev;
 	else return 0;
 }
@@ -122,8 +122,9 @@ node_p Walk (node_p node, node_f testfunc, unsigned int depth) {
 	if (!node) return 0; // NULL node gets none!
 	if (testfunc(node)) return node; // This node is the one we want.
 	if (depth > 0) // Make sure we don't go too deep
-		if(x = Walk(node->children, testfunc, depth - 1)) // Walk down
+		if((x = Walk(node->children, testfunc, depth - 1))) // Walk down
 			return x;
-	if (x = Walk(node->next, testfunc, depth))  // Walk across
+	if ((x = Walk(node->next, testfunc, depth)))  // Walk across
 		return x;
+	return 0;
 }

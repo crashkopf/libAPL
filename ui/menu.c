@@ -1,18 +1,21 @@
+#ifdef __AVR__
 #include <avr/pgmspace.h>
+#endif
+
 #include <stdio.h>
-#include "view.h"
 #include "tree.h"
-#include "menu.h"
+#include "ui/view.h"
+#include "ui/menu.h"
 
 void key0(menu_ptr m, char key);
 void key1(menu_ptr m, char key);
 void key2(menu_ptr m, char key);
 void key3(menu_ptr m, char key);
 
-keyaction_t key0_act = {0, key0};
-keyaction_t key1_act = {1, key1};
-keyaction_t key2_act = {2, key2};
-keyaction_t key3_act = {3, key3};
+keyaction_t key0_act = {0, (keyaction_ptr) key0};
+keyaction_t key1_act = {1, (keyaction_ptr) key1};
+keyaction_t key2_act = {2, (keyaction_ptr) key2};
+keyaction_t key3_act = {3, (keyaction_ptr) key3};
 
 keyaction_t *  menu_actions[] = {
 	&key0_act,

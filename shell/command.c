@@ -4,11 +4,9 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "compat.h"
 #include "shell/command.h"
 
-#ifndef __AVR__
-#include "fakeavr.h"
-#endif
 
 /*
   Search for a command in the map.  Returns a vector on succes or NULL on failure.

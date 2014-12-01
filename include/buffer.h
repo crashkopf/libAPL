@@ -2,7 +2,7 @@
   buffer.h - buffer handling utilities for stacks and FIFOs
 */
 
-//#define BSIZE 8
+#ifndef _BUFFER_H
 
 typedef struct {
 	unsigned int pos;  // The offset of the head
@@ -14,3 +14,6 @@ typedef struct {
 int readb(buffer *, char *, unsigned int);
 int writeb(buffer *, char *, unsigned int);
 int bflush(buffer *);
+
+#define _BUFFER_H
+#endif

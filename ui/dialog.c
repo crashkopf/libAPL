@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "view.h"
-#include "dialog.h"
+#include "ui/view.h"
+#include "ui/dialog.h"
 
 void Dialog_entry (dialog_ptr me) {
 }

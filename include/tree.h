@@ -38,8 +38,8 @@ int IsParent(node_p);
 int IsAhead(node_p n1, node_p n2);
 int IsBehind(node_p n1, node_p n2);
 
-int NextNode(node_p node);
-int PrevNode(node_p node);
+node_p NextNode(node_p node);
+node_p PrevNode(node_p node);
 
 node_p GetParent(node_p node);
 node_p GetChild(node_p parent);

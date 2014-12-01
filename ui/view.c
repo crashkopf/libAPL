@@ -8,10 +8,12 @@
   menu - A sub-class of view.  It presents a list of options to be selected from.
 */
 
-
+#ifdef __AVR__
 #include <avr/pgmspace.h>
+#endif
+
 #include <stdio.h>
-#include "view.h"
+#include "ui/view.h"
 
 // Default handlers.  These aren't public, so we declare them here instead of the header.
 void ViewDefaultEjectFunc(view_ptr view);
