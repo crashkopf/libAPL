@@ -5,7 +5,7 @@
 #include <avr/pgmspace.h>
 
 #include "gpio.h"
-#include "intmath.h"
+#include "util/intmath.h"
 #include "timer.h"
 #include "pwm.h"
 

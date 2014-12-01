@@ -1,9 +1,9 @@
 #include <stdint.h>
 #include <avr/io.h>
 #include <avr/pgmspace.h>
-#include "vnh_bridge.h"
-#include "adc.h"
-#include "intmath.h"
+#include "driver/hbridge.h"
+#include "driver/adc.h"
+#include "util/intmath.h"
 
 const char PROGMEM vnh_stdby_str[] = "STDBY";
 const char PROGMEM vnh_fwd_str[] = "FWD";

@@ -5,25 +5,23 @@ CC = avr-gcc
 CFLAGS = -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -mmcu=$(CPU) -DF_CPU=$(SYSCLOCK)L $(INCLUDES)
 AR = avr-ar
 
-drivers := driver/serio.o driver/adc.o driver/adcmap.o driver/hd44780.o
-shell := shell/shell.o shell/command.o shell/debug.o shell/adcutils.o
-util := buffer.o event.o tree.o cron.o
-sys := sys/device.o sys/proc.o
-ui := ui/view.o ui/viewmux.o ui/menu.o ui/dialog.o
-
-objs := $(drivers) $(shell) $(util) $(ui)
-
+dirs := include utils driver sys shell ui
+srcs := $(foreach I,$(dirs),$(wildcard $I/*.c))
+objs := $(srcs:%.c=%.o)
 library := libAPL.a
 
-%.o: %.c include/%.h
-	$(CC) $(CFLAGS) -o $@ $<
+all: libAPL.a
 
 libAPL.a: $(objs)
 	$(AR) rcs libAPL.a $(objs)
 
-all: libAPL.a
-	
+-include $(objs:.o=.d)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -MD -o $@ $<
+
 clean:
 	rm -f $(library) $(objs)
 
 .PHONY: all install clean test
+

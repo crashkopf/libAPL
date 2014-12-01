@@ -6,8 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "compat.h"
-
 #include "shell/command.h"
 #include "adcutils.h"
 

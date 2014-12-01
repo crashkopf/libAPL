@@ -1,7 +1,7 @@
 // pwm.c
 
 #include <avr/io.h>
-#include "pwm.h"
+#include "driver/pwm.h"
 
 #ifdef PWM0
 pwm_s PWM0 = {&OCR1A};

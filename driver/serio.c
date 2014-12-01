@@ -5,7 +5,7 @@
 #include <avr/interrupt.h>
 
 #include "driver/serio.h"
-#include "buffer.h"
+#include "util/buffer.h"
 #include "sys/device.h"
 
 #ifndef BAUD_TOL

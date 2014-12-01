@@ -2,12 +2,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef __AVR__
 #include <avr/pgmspace.h>
-#endif //__AVR__
-#include "compat.h"
+
 #include "shell/command.h"
-#include "shell.h"
+#include "shell/shell.h"
 
 
 #include "debug.h"

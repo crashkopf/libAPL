@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "compat.h"
+
 #include "shell/command.h"
 
 #define DUMPCOL 16

@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "compat.h"
+
 #include "shell/command.h"
 
 

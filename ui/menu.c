@@ -3,7 +3,7 @@
 #endif
 
 #include <stdio.h>
-#include "tree.h"
+#include "util/tree.h"
 #include "ui/view.h"
 #include "ui/menu.h"
 
