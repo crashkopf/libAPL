@@ -22,7 +22,7 @@
 
 typedef struct {
 	//const timer_s * timer;
-	uint8_t * ocr;
+	volatile uint8_t * ocr;
 } pwm_s;
 
 #ifdef PWM0

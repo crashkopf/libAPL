@@ -1,5 +1,5 @@
-#include "timer.h"
-#include "device.h"
+#include "driver/timer.h"
+#include "sys/device.h"
 
 typedef struct {
 	unsigned int state; 

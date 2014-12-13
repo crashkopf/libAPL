@@ -2,7 +2,7 @@
 #include <avr/io.h>
 #include <stdint.h>
 #include <limits.h>
-#include "timer.h"
+#include "driver/timer.h"
 
 volatile timer_s * timer_head;
 
@@ -28,10 +28,10 @@ void timer_init() {
 	TCCR4C = 0;
 	// Set output compare registers
 	OCR4AH = 0;
-	OCR4AL = 125;  // Should be 250, but it seems like the clock is not 16MHz
+	OCR4AL = 250;
 }
 void timer_start(timer_s *t) {
-	timer_s * u;
+	volatile timer_s * u;
 	// If there's no other timers, make this one the head
 	if (!timer_head) timer_head = t;
 	// Walk to the end of the list
@@ -48,7 +48,7 @@ void timer_start(timer_s *t) {
 	}
 }
 void timer_stop(timer_s *t) {
-	timer_s * u = timer_head;
+	volatile timer_s * u = timer_head;
 	// Check for t at the head
 	if (timer_head == t) {
 		// Unlink t from the list
@@ -75,7 +75,7 @@ unsigned long timer_read(timer_s *t) {
 }
 
 ISR(TIMER4_COMPA_vect) {
-	timer_s * t = timer_head;
+	volatile timer_s * t = timer_head;
 	while (t) {
 		if (t->direction && (t->count < LONG_MAX)) t->count++;
 		else if (t->count > 0) t->count--;
