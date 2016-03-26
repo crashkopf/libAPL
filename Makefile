@@ -1,19 +1,24 @@
-CPU ?= atmega1280
-SYSCLOCK ?= 16000000
-INCLUDES = -I/usr/lib/avr/include -iquote "$(CURDIR)/include"
-CC = avr-gcc
-CFLAGS = -c -g -Os -Wall -Wno-main -fno-exceptions -ffunction-sections -fdata-sections -mmcu=$(CPU) -DF_CPU=$(SYSCLOCK)L $(INCLUDES)
-AR = avr-ar
+DEVICE ?=
+ARCH ?=
 
-dirs := include \
+-include devices/$(DEVICE)/profile.mk
+-include arch/$(ARCH)/profile.mk
+
+INCLUDES = -I/usr/lib/avr/include  -iquote "$(CURDIR)/include/$(DEVICE)" -iquote "$(CURDIR)/include/$(ARCH)" -iquote "$(CURDIR)/include"
+
+CFLAGS = -c -Os -Wall -Wno-main -fno-exceptions -ffunction-sections -fdata-sections  $(INCLUDES) $(ARCH_FLAGS) $(HWDEFS)
+
+dirs := \
+	arch/$(ARCH) \
+	devices/$(DEVICE) \
 	utils \
-	driver \
 	sys \
-	shell \
+#	shell \
 #	ui
-srcs := $(foreach I,$(dirs),$(wildcard $I/*.c)) main.c
+
+srcs := $(foreach I,$(dirs),$(wildcard $I/*.c))
 objs := $(srcs:%.c=%.o)
-library := lemnos.a
+library := libcrashkopf.a
 
 all: $(library)
 

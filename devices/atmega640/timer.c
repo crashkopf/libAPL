@@ -2,7 +2,7 @@
 #include <avr/io.h>
 #include <stdint.h>
 #include <limits.h>
-#include "driver/timer.h"
+#include "timer.h"
 
 volatile timer_s * timer_head;
 

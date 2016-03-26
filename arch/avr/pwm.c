@@ -1,7 +1,7 @@
 // pwm.c
 
 #include <avr/io.h>
-#include "driver/pwm.h"
+#include "pwm.h"
 
 #ifdef PWM0
 pwm_s PWM0 = {&OCR1A};
@@ -24,6 +24,7 @@ pwm_s PWM5 = {&OCR3C};
 
 
 void timer1_init(void) {
+#ifdef PWM_TIMER1
 	// Zero count
 	TCNT1 = 0;
 	// Timer 1 control registers
@@ -46,9 +47,11 @@ void timer1_init(void) {
 	TCCR1A |= _BV(COM1C1);
 	DDRB |= _BV(DDB7);
 #endif
+#endif
 }
 
 void timer2_init(void) {
+#ifdef PWM_TIMER2
 	TCCR2A = 0;
 	TCCR2B = 0
 		| _BV(CS01);
@@ -57,10 +60,11 @@ void timer2_init(void) {
 		| _BV(OCIE2A)
 		| _BV(TOIE2)
 	;
-	
+#endif
 }
 
 void timer3_init(void) {
+#ifdef PWM_TIMER3
 	// Zero count
 	TCNT3 = 0;
 	// Timer 1 control registers
@@ -82,6 +86,7 @@ void timer3_init(void) {
 	OCR3C = 0;
 	TCCR3A |= _BV(COM3C1);
 	DDRB |= _BV(DDE5);
+#endif
 #endif
 }
 

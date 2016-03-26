@@ -14,10 +14,10 @@
 #define PWM_MAX 255
 
 //#define PWM0 PWM0
-#define PWM1 PWM1
-#define PWM2 PWM2
+//#define PWM1 PWM1
+//#define PWM2 PWM2
 //#define PWM3 PWM3
-#define PWM4 PWM4
+//#define PWM4 PWM4
 //#define PWM5 PWM5
 
 typedef struct {

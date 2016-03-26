@@ -4,7 +4,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#include "driver/serio.h"
+#include "serio.h"
 #include "util/buffer.h"
 #include "sys/device.h"
 

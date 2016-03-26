@@ -9,7 +9,7 @@
 
 
 #include "debug.h"
-#include "adcutils.h"
+//#include "adcutils.h"
 
 int echo (int, char **, environment *);
 int help(int, char **, environment *);
@@ -23,7 +23,7 @@ static const char quest_desc [] PROGMEM = "Same as 'help'";
 
 #define INCLUDE_CMDS \
 	INCLUDE_DEBUG \
-	INCLUDE_ADCUTILS
+//	INCLUDE_ADCUTILS
 
 #define V(c) static const char c##_str [] PROGMEM = #c; 
 	INCLUDE_CMDS
