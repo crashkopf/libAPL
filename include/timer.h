@@ -8,7 +8,8 @@
 
 typedef struct timer_s {
 	unsigned long count;
-	unsigned direction: 1;
+	unsigned direction: 1;	// 1 for up, 0 for down
+	unsigned overflow: 1;	// 1 for okay to over/under flow the counter
 	struct timer_s * next;
 } timer_s;
 
