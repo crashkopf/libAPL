@@ -1,37 +1,54 @@
-DEVICE ?=
+#PROJECT ?=
+
+SRCDIR ?= src
+BUILDDIR ?= build
+INCLUDEDIR ?= include
+
+TARGET ?=
+CPU ?=
 ARCH ?=
 
--include devices/$(DEVICE)/profile.mk
--include arch/$(ARCH)/profile.mk
+-include src/$(TARGET)/profile.mk
+-include src/$(CPU)/profile.mk
+-include src/$(ARCH)/profile.mk
 
-INCLUDES = -I/usr/lib/avr/include  -iquote "$(CURDIR)/include/$(DEVICE)" -iquote "$(CURDIR)/include/$(ARCH)" -iquote "$(CURDIR)/include"
+INCLUDES = $(INCLUDEDIR) $(INCLUDEDIR)/$(TARGET) $(INCLUDEDIR)/$(CPU) $(INCLUDEDIR)/$(ARCH)
 
-CFLAGS = -c -Os -Wall -Wno-main -fno-exceptions -ffunction-sections -fdata-sections  $(INCLUDES) $(ARCH_FLAGS) $(HWDEFS)
+DEFINES = -D _ARCH=$(ARCH) -D _CPU=$(CPU) -D _TARGET=$(TARGET) -D _PROJECT=$(PROJECT)
 
-dirs := \
-	arch/$(ARCH) \
-	devices/$(DEVICE) \
-	utils \
-	sys \
-#	shell \
-#	ui
+CFLAGS = -E -c -Os -Wall -Wno-main -fno-exceptions -ffunction-sections -fdata-sections $(DEFINES) $(addprefix -iquote , $(INCLUDES)) $(ARCH_FLAGS) $(HWDEFS)
 
-srcs := $(foreach I,$(dirs),$(wildcard $I/*.c))
-objs := $(srcs:%.c=%.o)
-library := libcrashkopf.a
+#.IGNORE $(addsuffix /serio.h, $(INCLUDES))
 
-all: $(library)
+serio.o: src/$(CPU)/serio.c $(addsuffix /serio.h, $(INCLUDES))
 
-$(library): $(objs)
-	$(AR) rcs $@ $^
+#srcs += $(foreach I,$(dirs),$(wildcard $I/*.c))
+#objs := $(srcs:%.c=$(BUILDDIR)/%.o)
+#library := libcrashkopf.a
 
--include $(objs:.o=.d)
+#all: $(library)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -MD -o $@ $<
+#serio.o: src/$(DEVICE)/serio.c $(IDIR)/serio.h $(IDIR)/$(ARCH)/serio.h $(IDIR)/$(DEVICE)/serio.h
+
+
+#$(DEVICE):
+#	-include ./device/$(@)/profile.mk
+
+#$(objs): $(BUILDDIR)/%.o: %.c
+#	mkdir -p $(@D)
+#	$(CC) $(CFLAGS) -MD -o $@ $<
+
+#$(library): $(DEVICE) $(objs)
+#
+#$(AR) rcs $@ $^
+
+#-include $(objs:.o=.d)
+
+%.o:
+	$(CC) $(CFLAGS) -o $@ $<
 
 clean:
-	rm -f $(library) $(objs) $(objs:.o=.d)
+	rm -f $(library) $(objs) $(objs:.o=.d) 
 
 .PHONY: all install clean test
 

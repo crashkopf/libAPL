@@ -6,46 +6,10 @@
 
 #include "serio.h"
 
-#ifndef F_CPU
-#define F_CPU 16000000
-#endif
-
-#ifndef BAUD_TOL
-#define BAUD_TOL 2
-#endif
-
-#define BSIZE 64
-
-// UCSRxA
-#define U2X 1
-#define TXEN 6
-#define RXEN 7
-// UCSRxB
-#define UDRIE 5
-#define TXCIE 6
-#define RXCIE 7
-
-#define UCSZ0 1
-#define UCSZ1 2
-#define USBS 3
-#define UPM0 4
-#define UPM1 5
-
-struct SIO_port {
-	volatile unsigned char *UCSRA;
-	volatile unsigned char *UCSRB;
-	volatile unsigned char *UCSRC;
-	volatile unsigned char *UBRRL;
-	volatile unsigned char *UBRRH;
-	volatile unsigned char *UDR;
-};
-
-/*
 char rdata[BSIZE];
 char wdata[BSIZE];
 buffer rdbuf = {0, 0, BSIZE, rdata};
 buffer wrbuf = {0, 0, BSIZE, wdata};
-*/
 
 SIO_rx_callback_t USART0_rx;
 SIO_tx_callback_t USART0_tx;
@@ -77,23 +41,21 @@ static inline void rxstop(SIO_port_t *port) {
 }
 
 void _rx_callback(volatile unsigned char * data) {
-/*
 	char c = *data; 
 	// Always read from UDR, otherwise the interrupt will keep firing
 	writeb(&rdbuf, &c, 1);
-*/
 }
+
 void _tx_callback(volatile unsigned char * data) {
 	char c = *data;
 }
+
 void _dre_callback(volatile unsigned char * data) {
-/*
 	char c;
 	int n;
 	n = readb(&wrbuf, &c, 1);
 	if (n > 0) UDR0 = c;
 	else txstop();  // Turn off interrupt when the buffer is empty, otherwise it will keep firing
-*/
 }
 
 ISR(USART0_RX_vect) {
@@ -109,23 +71,18 @@ ISR(USART0_TX_vect) {
 ISR(USART0_UDRE_vect) {
 	USART0_dre(&UDR0);
 }
-/*
-int SIO_read(SIO_port_t *port, const unsigned char * s, unsigned int m) {
-	int n;
-	rxstop(port);			// Stop RX so buffer isn't modified
-	n = readb(&rdbuf, s, m);	// Read from buffer
-	rxstart(port);			// Start RX again
-	return n;
+
+void SIO_init(SIO_port_t * port, SIO_baud_t baud, SIO_frame_t frame) {
+	
+	SIO_set_baud(port, baud);
+	SIO_set_frame(port, frame);
+
+	rxstart(port); // enable interrupts
+	txstart(port);
+
+	
 }
 
-int SIO_write(SIO_port_t *port, const unsigned char * s, unsigned int m) {
-	int n;
-	txstop(port);			// Stop TX so buffer isn't modified
-	n = writeb(&wrbuf, s, m);	// Write to buffer
-	txstart(port);			// Start TX again
-	return n;
-}
-*/
 void SIO_set_baud(SIO_port_t *port, SIO_baud_t baud) {
 	int use2x;
 	unsigned long div;
@@ -159,16 +116,27 @@ void SIO_set_frame(SIO_port_t *port, SIO_frame_t frame) {
 	
 }
 
-void SIO_init(SIO_port_t * port, SIO_baud_t baud, SIO_frame_t frame) {
-	
-	SIO_set_baud(port, baud);
-	SIO_set_frame(port, frame);
-
-	rxstart(port); // enable interrupts
-	txstart(port);
-
-	
+/*
+int SIO_read(SIO_port_t *port, const unsigned char * s, unsigned int m) {
+	int n;
+	rxstop(port);			// Stop RX so buffer isn't modified
+	n = readb(&rdbuf, s, m);	// Read from buffer
+	rxstart(port);			// Start RX again
+	return n;
 }
+
+int SIO_write(SIO_port_t *port, const unsigned char * s, unsigned int m) {
+	int n;
+	txstop(port);			// Stop TX so buffer isn't modified
+	n = writeb(&wrbuf, s, m);	// Write to buffer
+	txstart(port);			// Start TX again
+	return n;
+}
+*/
+
+int SIO_set_rx_callback(SIO_port_t *port, SIO_rx_callback_t cb);
+int SIO_set_tx_callback(SIO_port_t *port, SIO_tx_callback_t cb);
+int SIO_set_dre_callback(SIO_port_t *port, SIO_dre_callback_t cb);
 
 /*
  These functions will IO block and are only for debugging.
