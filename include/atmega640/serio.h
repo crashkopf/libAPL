@@ -6,6 +6,8 @@
 #define BAUD_TOL 2
 #endif
 
+#include "buffer.h"
+
 #ifndef BSIZE
 #define BSIZE 64
 #endif
@@ -32,15 +34,13 @@ typedef struct {
 	volatile unsigned char *UBRRL;
 	volatile unsigned char *UBRRH;
 	volatile unsigned char *UDR;
+	buffer rdbuf;
+	buffer wrbuf;
+	char rddata[BSIZE];
+	char wrdata[BSIZE];
 } SIO_port_t;
 
 typedef unsigned long SIO_baud_t;
-
-typedef struct {
-	unsigned char data : 3;
-	unsigned char parity : 2;
-	unsigned char stop : 1;
-} SIO_frame_t;
 
 extern SIO_port_t USART0;
 extern SIO_port_t USART1;

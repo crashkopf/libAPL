@@ -8,31 +8,26 @@ TARGET ?=
 CPU ?=
 ARCH ?=
 
--include src/$(TARGET)/profile.mk
--include src/$(CPU)/profile.mk
--include src/$(ARCH)/profile.mk
+-include $(SRCDIR)/$(TARGET)/profile.mk
+-include $(SRCDIR)/$(CPU)/profile.mk
+-include $(SRCDIR)/$(ARCH)/profile.mk
 
 INCLUDES = $(INCLUDEDIR) $(INCLUDEDIR)/$(TARGET) $(INCLUDEDIR)/$(CPU) $(INCLUDEDIR)/$(ARCH)
 
-DEFINES = -D _ARCH=$(ARCH) -D _CPU=$(CPU) -D _TARGET=$(TARGET) -D _PROJECT=$(PROJECT)
+DEFINES = -D_ARCH=$(ARCH) -D_CPU=$(CPU) -D_TARGET=$(TARGET) -D_PROJECT=$(PROJECT)
 
-CFLAGS = -E -c -Os -Wall -Wno-main -fno-exceptions -ffunction-sections -fdata-sections $(DEFINES) $(addprefix -iquote , $(INCLUDES)) $(ARCH_FLAGS) $(HWDEFS)
+CFLAGS = -c -Os -Wall -Wno-main -fno-exceptions -ffunction-sections -fdata-sections $(DEFINES) $(addprefix -iquote , $(INCLUDES)) $(ARCH_FLAGS) $(HWDEFS)
 
 #.IGNORE $(addsuffix /serio.h, $(INCLUDES))
 
-serio.o: src/$(CPU)/serio.c $(addsuffix /serio.h, $(INCLUDES))
+VPATH = $(SRCDIR)
 
-#srcs += $(foreach I,$(dirs),$(wildcard $I/*.c))
-#objs := $(srcs:%.c=$(BUILDDIR)/%.o)
-#library := libcrashkopf.a
+library := libcrashkopf.a
 
-#all: $(library)
+all: serio.o buffer.o
 
-#serio.o: src/$(DEVICE)/serio.c $(IDIR)/serio.h $(IDIR)/$(ARCH)/serio.h $(IDIR)/$(DEVICE)/serio.h
-
-
-#$(DEVICE):
-#	-include ./device/$(@)/profile.mk
+serio.o: $(CPU)/serio.c $(addsuffix /serio.h, $(INCLUDES)) buffer.o
+buffer.o: buffer.c $(INCLUDEDIR)/buffer.h
 
 #$(objs): $(BUILDDIR)/%.o: %.c
 #	mkdir -p $(@D)
