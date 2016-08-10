@@ -14,6 +14,8 @@
 #endif
 */
 
+typedef struct SIO_port SIO_port_t;
+
 #ifdef _TARGET
 #define inc stringify(_TARGET/serio.h)
 #include inc
@@ -36,9 +38,9 @@
 #define SIO_PARITY_NONE 0
 #define SIO_STOPBITS_1 0
 
-typedef void (* SIO_rx_callback_t)(SIO_port_t * port, volatile unsigned char * data);
-typedef void (* SIO_tx_callback_t)(SIO_port_t * port, volatile unsigned char * data);
-typedef void (* SIO_dre_callback_t)(SIO_port_t * port, volatile unsigned char * data);
+typedef void (* SIO_rx_callback_t)(SIO_port_t * port);
+typedef void (* SIO_tx_callback_t)(SIO_port_t * port);
+typedef void (* SIO_dre_callback_t)(SIO_port_t * port);
 
 void SIO_init(SIO_port_t * port, SIO_baud_t baud, unsigned char framedef);
 void SIO_set_baud(SIO_port_t *port, SIO_baud_t baud);

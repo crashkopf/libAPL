@@ -1,45 +1,47 @@
 #PROJECT ?=
 
-SRCDIR ?= src
-BUILDDIR ?= build
-INCLUDEDIR ?= include
+LIBCRASHKOPF ?= .
+SRCDIR ?= $(LIBCRASHKOPF)/src
+INCLUDEDIR ?= $(LIBCRASHKOPF)/include
 
-TARGET ?=
-CPU ?=
-ARCH ?=
-
--include $(SRCDIR)/$(TARGET)/profile.mk
--include $(SRCDIR)/$(CPU)/profile.mk
--include $(SRCDIR)/$(ARCH)/profile.mk
-
-INCLUDES = $(INCLUDEDIR) $(INCLUDEDIR)/$(TARGET) $(INCLUDEDIR)/$(CPU) $(INCLUDEDIR)/$(ARCH)
-
-DEFINES = -D_ARCH=$(ARCH) -D_CPU=$(CPU) -D_TARGET=$(TARGET) -D_PROJECT=$(PROJECT)
-
-CFLAGS = -c -Os -Wall -Wno-main -fno-exceptions -ffunction-sections -fdata-sections $(DEFINES) $(addprefix -iquote , $(INCLUDES)) $(ARCH_FLAGS) $(HWDEFS)
-
-#.IGNORE $(addsuffix /serio.h, $(INCLUDES))
+INCLUDES = $(INCLUDEDIR)
 
 VPATH = $(SRCDIR)
 
-library := libcrashkopf.a
+CFLAGS = -c -Os -Wall -Wno-main
+
+ifdef TARGET
+include $(SRCDIR)/$(TARGET)/profile.mk
+INCLUDES += $(INCLUDEDIR)/$(TARGET)
+DEFINES += _ARCH=$(ARCH)
+VPATH += $(SRCDIR)/$(TARGET)
+endif
+
+ifdef CPU
+include $(SRCDIR)/$(CPU)/profile.mk
+INCLUDES += $(INCLUDEDIR)/$(CPU)
+DEFINES += _CPU=$(CPU)
+VPATH += $(SRCDIR)/$(CPU)
+endif
+
+ifdef ARCH
+include $(SRCDIR)/$(ARCH)/profile.mk
+INCLUDES += $(INCLUDEDIR)/$(ARCH)
+DEFINES += _TARGET=$(TARGET)
+VPATH += $(SRCDIR)/$(ARCH)
+endif
+
+#CFLAGS = -c -Os -Wall -Wno-main -fno-exceptions -ffunction-sections -fdata-sections $(addprefix -D, $(DEFINES)) $(addprefix -I, $(INCLUDES)) $(ARCH_FLAGS) $(HWDEFS)
+CFLAGS += $(addprefix -D, $(DEFINES)) $(addprefix -I, $(INCLUDES)) $(ARCH_FLAGS) $(HWDEFS)
 
 all: serio.o buffer.o
 
-serio.o: $(CPU)/serio.c $(addsuffix /serio.h, $(INCLUDES)) buffer.o
+serio.o: serio.c $(addsuffix /serio.h, $(INCLUDES)) buffer.o
 buffer.o: buffer.c $(INCLUDEDIR)/buffer.h
-
-#$(objs): $(BUILDDIR)/%.o: %.c
-#	mkdir -p $(@D)
-#	$(CC) $(CFLAGS) -MD -o $@ $<
-
-#$(library): $(DEVICE) $(objs)
-#
-#$(AR) rcs $@ $^
 
 #-include $(objs:.o=.d)
 
-%.o:
+%.o: %.c
 	$(CC) $(CFLAGS) -o $@ $<
 
 clean:
