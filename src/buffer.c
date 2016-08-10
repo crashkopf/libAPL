@@ -13,7 +13,8 @@ int bflush(buffer * b) {
 }
 
 // Points to one byte AFTER the end of data
-int btail(buffer * b) {
+static inline
+unsigned int btail(buffer * b) {
 	int p;
 	p = b->pos + b->len;
 	if (p >= b->size) 
