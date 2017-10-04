@@ -19,6 +19,9 @@ typedef struct SIO_port {
 	volatile unsigned char *CTS_port;
 	volatile unsigned char *CTS_DDR;
 	unsigned char CTS_pin;
+	SIO_rx_callback_t rx_callback;
+	SIO_tx_callback_t tx_callback;
+	SIO_dre_callback_t dre_callback;
 	buffer rdbuf;
 	buffer wrbuf;
 	char rddata[BSIZE];
@@ -43,14 +46,6 @@ SIO_port_t USART1 = {
 	&UDR1
 };
 
-SIO_rx_callback_t USART0_rx;
-SIO_tx_callback_t USART0_tx;
-SIO_dre_callback_t USART0_dre;
-
-SIO_rx_callback_t USART1_rx;
-SIO_tx_callback_t USART1_tx;
-SIO_dre_callback_t USART1_dre;
-
 static inline void SIO_txstart(SIO_port_t *port) {
 	*port->UCSRB |= _BV(UDRIE) | _BV(TXEN);		// Turn on UDR empty interrupt
 }
@@ -69,18 +64,18 @@ ISR(USART0_RX_vect) {
 	// Always read from UDR, otherwise the interrupt will keep firing
 	char c = UDR0; 
 	writeb(&USART0.rdbuf, &c, 1);
-	if (USART0_rx) USART0_rx(&USART0);
+	if (USART0.rx_callback) USART0.rx_callback(&USART0);
 }
 
 ISR(USART0_TX_vect) {
-	if (USART0_tx) USART0_tx(&USART0);
+	if (USART0.tx_callback) USART0.tx_callback(&USART0);
 }
 
 ISR(USART0_UDRE_vect) {
 	char c;
 	if (readb(&USART0.wrbuf, &c, 1) > 0) UDR0 = c;
 	else SIO_txstop(&USART0);  // Turn off interrupt when the buffer is empty, otherwise it will keep firing
-	if (USART0_dre) USART0_dre(&USART0);
+	if (USART0.dre_callback) USART0.dre_callback(&USART0);
 }
 
 // USART1 interrupt handlers
@@ -88,18 +83,18 @@ ISR(USART1_RX_vect) {
 	// Always read from UDR, otherwise the interrupt will keep firing
 	char c = UDR1; 
 	writeb(&USART1.rdbuf, &c, 1);
-	if (USART1_rx) USART1_rx(&USART1);
+	if (USART1.rx_callback) USART1.rx_callback(&USART1);
 }
 
 ISR(USART1_TX_vect) {
-	if (USART1_tx) USART1_tx(&USART0);
+	if (USART1.tx_callback) USART1.tx_callback(&USART0);
 }
 
 ISR(USART1_UDRE_vect) {
 	char c;
 	if (readb(&USART1.wrbuf, &c, 1) > 0) UDR1 = c;
 	else SIO_txstop(&USART1);  // Turn off interrupt when the buffer is empty, otherwise it will keep firing
-	if (USART1_dre) USART1_dre(&USART1);
+	if (USART1.dre_callback) USART1.dre_callback(&USART1);
 }
 
 
@@ -164,6 +159,12 @@ int SIO_write(SIO_port_t *port, char * s, unsigned int m) {
 	return n;
 }
 
-void SIO_set_rx_callback(SIO_port_t *port, SIO_rx_callback_t cb) {}
-void SIO_set_tx_callback(SIO_port_t *port, SIO_tx_callback_t cb) {}
-void SIO_set_dre_callback(SIO_port_t *port, SIO_dre_callback_t cb) {}
+void SIO_set_rx_callback(SIO_port_t *port, SIO_rx_callback_t cb) {
+	port->rx_callback = cb;
+}
+void SIO_set_tx_callback(SIO_port_t *port, SIO_tx_callback_t cb) {
+	port->tx_callback = cb;
+}
+void SIO_set_dre_callback(SIO_port_t *port, SIO_dre_callback_t cb) {
+	port->dre_callback = cb;
+}

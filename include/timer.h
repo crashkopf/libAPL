@@ -1,9 +1,26 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-// Note: it would be really great to use ATOMIC_BLOCK to turn off interrupts
-// around these register accesses, but unfortunately we'd have to switch
-// to compiling this with C99, which isn't supported by the Arduino IDE.
+#define xstringify(x) #x
+#define stringify(x) xstringify(x)
+#define pathinclude(path, file) stringify(path/file)
+
+#ifdef _TARGET
+#define inc stringify(_TARGET/timer.h)
+#include inc
+#undef inc
+#endif
+#ifdef _CPU
+#define inc stringify(_CPU/timer.h)
+#include inc
+#undef inc
+#endif
+#ifdef _ARCH
+#define inc stringify(_ARCH/timer.h)
+#include inc
+#undef inc
+#endif
+
 //#include <util/atomic.h>
 
 typedef struct timer_s {
